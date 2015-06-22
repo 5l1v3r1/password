@@ -1,0 +1,48 @@
+/* Search
+ */
+div.search {
+	position:absolute;
+	top:-38px;
+	right:10px;
+}
+
+div.search input.form-control {
+	width:150px;
+	color:#a0a0a0;
+	padding:0 6px;
+	margin:0;
+	height:26px;
+}
+
+@media (max-width:767px) {
+	div.search {
+		top:10px;
+	}
+}
+
+/* Overview
+ */
+table.table td:first-child {
+	width:30px;
+}
+
+table.table td:last-child {
+	width:40px;
+}
+
+table.table td:nth-child(2) a {
+	display:inline-block;
+	min-width:30px;
+}
+
+/* Edit
+ */
+div.parent {
+	display:inline-block;
+	white-space:nowrap;
+	margin-right:15px;
+}
+
+div.parent input {
+	margin-right:5px;
+}
