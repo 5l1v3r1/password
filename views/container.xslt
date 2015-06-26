@@ -4,17 +4,24 @@
 
 <!--
 //
-//  Overview template
+//  Search template
 //
 //-->
-<xsl:template match="overview">
+<xsl:template name="search">
 <div class="search">
 <form action="/{/output/page}" method="post">
 <input type="text" id="search" name="search" placeholder="Search" class="form-control" />
 <input type="hidden" name="submit_button" value="Search" />
 </form>
 </div>
+</xsl:template>
 
+<!--
+//
+//  Overview template
+//
+//-->
+<xsl:template match="overview">
 <table class="table table-striped table-condensed">
 <thead>
 <tr><th></th><th>Name</th><th></th></tr>
@@ -103,6 +110,7 @@
 //-->
 <xsl:template match="content">
 <h1>Passwords</h1>
+<xsl:call-template name="search" />
 <xsl:apply-templates select="crumbs" />
 <xsl:apply-templates select="overview" />
 <xsl:apply-templates select="edit" />

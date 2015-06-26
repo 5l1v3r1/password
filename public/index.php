@@ -181,7 +181,7 @@
 	/* Output content
 	 */
 	$output = $_output->generate();
-	if (($last_errors = ob_get_clean()) != "") {
+	if ((($last_errors = ob_get_clean()) != "") && ($_page->module != "setup")) {
 		$last_errors = "Fatal errors:\n".$last_errors;
 
 		header_remove("Content-Encoding");

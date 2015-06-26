@@ -11,7 +11,7 @@
 			$this->output->add_javascript("banshee/login.js");
 			$this->output->run_javascript("set_focus(); hash = window['".PASSWORD_HASH."'];");
 
-			$this->output->open_tag("login");
+			$this->output->open_tag("login", array("register" => show_boolean(module_exists("register"))));
 
 			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
 
@@ -27,7 +27,7 @@
 			$this->output->add_tag("remote_addr", $_SERVER["REMOTE_ADDR"]);
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				if (strpos($_POST["username"], "'") !== false) {
+				if ((strpos($_POST["username"], "'") !== false) || (strpos($_POST["password"], "'") !== false)) {
 					$this->output->add_message("Sorry, this application does not support SQL injection.");
 					header("X-Hiawatha-Monitor: exploit_attempt");
 				} else {

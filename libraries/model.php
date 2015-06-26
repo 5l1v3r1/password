@@ -49,7 +49,6 @@
 			if (class_exists($model_class) == false) {
 				return null;
 			} else if (is_subclass_of($model_class, "model") == false) {
-				exit;
 				return null;
 			}
 

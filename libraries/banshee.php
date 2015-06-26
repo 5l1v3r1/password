@@ -10,6 +10,7 @@
 	 */
 	define("BANSHEE_VERSION", "5.0");
 	define("ADMIN_ROLE_ID", 1);
+	define("USER_ROLE_ID", 2);
 	define("YES", 1);
 	define("NO", 0);
 	define("USER_STATUS_DISABLED", 0);
@@ -18,6 +19,7 @@
 	define("PASSWORD_HASH", "sha256");
 	define("PASSWORD_ITERATIONS", 100000);
 	define("SESSION_NAME", "WebsiteSessionID");
+	define("HOUR", 3600);
 	define("DAY", 86400);
 	define("PAGE_MODULE", "banshee/page");
 	define("ERROR_MODULE", "banshee/error");

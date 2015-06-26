@@ -16,6 +16,10 @@
 					"Action log"    => array("cms/action", "action.png"),
 					"Settings"      => array("cms/settings", "settings.png")));
 
+			if (module_exists("setup")) {
+				$this->output->add_system_warning("The setup module is still available. Remove it from settings/public_pages.conf.");
+			}
+
 			if ($this->settings->secret_website_code == "CHANGE_ME_INTO_A_RANDOM_STRING") {
 				$this->output->add_system_warning("Don't forget to change the secret_website_code setting.");
 			}

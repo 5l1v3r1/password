@@ -14,7 +14,7 @@
 <input type="text" autocapitalize="off" autocorrect="off" id="username" name="username" value="{username}" class="form-control" />
 <label for="password">Password:</label>
 <input type="password" id="password" name="password" class="form-control" />
-<p>Bind session to IP (<span style="font-size:10px"><xsl:value-of select="remote_addr" /></span>): <input type="checkbox" name="bind_ip">
+<p>Bind session to IP (<xsl:value-of select="remote_addr" />): <input type="checkbox" name="bind_ip">
 <xsl:if test="bind">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
@@ -22,10 +22,10 @@
 <div class="btn-group">
 <input type="submit" value="Login" class="btn btn-default" />
 </div>
-
-<input type="hidden" id="use_cr_method" name="use_cr_method" value="no" />
 </form>
-<input type="hidden" id="challenge" value="{challenge}" />
+<xsl:if test="@register='yes'">
+<p>Click <a href="/register">here</a> to register for an account.</p>
+</xsl:if>
 </xsl:template>
 
 <!--

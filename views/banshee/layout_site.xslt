@@ -8,9 +8,9 @@
 <meta http-equiv="Content-Language" content="{language}" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<meta name="author" content="AUTHOR" />
+<meta name="author" content="Hugo Leisink" />
 <meta name="publisher" content="PUBLISHER" />
-<meta name="copyright" content="COPYRIGHT" />
+<meta name="copyright" content="Copyright (C) by Hugo Leisink" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (http://www.banshee-php.org/)" />

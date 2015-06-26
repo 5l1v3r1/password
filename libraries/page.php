@@ -48,8 +48,12 @@
 			} else if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
 				$this->module = "banshee/offline";
 			} else if ($this->db->connected == false) {
-				$this->module = ERROR_MODULE;
-				$this->http_code = 500;
+				if (module_exists("setup") && is_true(DEBUG_MODE)) {
+					$this->module = "setup";
+				} else {
+					$this->module = ERROR_MODULE;
+					$this->http_code = 500;
+				}
 			} else {
 				list($this->url) = explode("?", $_SERVER["REQUEST_URI"], 2);
 				$path = trim($this->url, "/");

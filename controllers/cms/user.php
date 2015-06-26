@@ -146,12 +146,7 @@
 							$this->output->add_message("Database error while updating user.");
 							$this->show_user_form($_POST);
 						} else {
-							if ($_POST["username"] == $username) {
-								$name = $_POST["id"];
-							} else {
-								$name = sprintf("%s -> %s", $username, $_POST["username"]);
-							}
-							$this->user->log_action("user %s updated", $name);
+							$this->user->log_action("user %s updated", $username);
 							if (is_true($_POST["generate"])) {
 								$this->model->send_notification($_POST);
 							}
@@ -161,13 +156,12 @@
 				} else if ($_POST["submit_button"] == "Delete user") {
 					/* Delete user
 					 */
-					$username = $this->model->get_username($_POST["id"]);
-
 					if ($this->model->delete_oke($_POST["id"]) == false) {
 						$this->show_user_form($_POST);
 					} else if ($this->model->delete_user($_POST["id"]) == false) {
 						$this->output->add_tag("result", "Database error while deleting user.");
 					} else {
+						$username = $this->model->get_username($_POST["id"]);
 						$this->user->log_action("user %s deleted", $username);
 						$this->show_user_overview();
 					}

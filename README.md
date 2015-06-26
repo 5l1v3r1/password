@@ -30,9 +30,7 @@ Banshee needs PHP's MySQL and XSL module. The Password Manager also needs the MC
 
 Configure your database
 -----------------------
-Change the database settings in 'settings/website.conf' and run the script 'database/setup_database'. This will create a MySQL user, a MySQL database and initialize the created database.
-
-After installation of the database, execute './extra/set_password admin' to set the password and crypto key for the user 'admin'.
+Open the website in your browser and follow the instructions on your screen.
 
 Configure Banshee
 -----------------
