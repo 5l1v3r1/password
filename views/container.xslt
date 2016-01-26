@@ -44,7 +44,7 @@
 <xsl:for-each select="password">
 <tr>
 <td><img src="/images/file.png" alt="file" /></td>
-<td><a href="/password/{@id}" class="cell"><xsl:value-of select="name" /></a></td>
+<td><xsl:value-of select="path" /> <a href="/password/{@id}" class="cell"><xsl:value-of select="name" /></a></td>
 <td><a href="/password/{@id}/edit">edit</a></td>
 </tr>
 </xsl:for-each>

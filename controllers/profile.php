@@ -1,9 +1,7 @@
 <?php
 	class profile_controller extends controller {
 		private function show_profile_form($profile) {
-			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("profile.js");
-			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");
 

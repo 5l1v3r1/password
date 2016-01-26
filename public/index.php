@@ -53,11 +53,12 @@
 
 	/* Add layout data to output XML
 	 */
-	$_output->open_tag("output");
+	$_output->open_tag("output", array("iphone" => show_boolean(strpos($_SERVER["HTTP_USER_AGENT"], "iPhone") !== false)));
 
 	if ($_output->add_layout_data) {
 		$_output->open_tag("banshee");
 		$_output->add_tag("version", BANSHEE_VERSION);
+		$_output->add_tag("session_timeout", $_settings->session_timeout);
 		$_output->close_tag();
 		$_output->add_tag("website_url", $_SERVER["SERVER_NAME"]);
 

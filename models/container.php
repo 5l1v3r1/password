@@ -32,6 +32,20 @@
 			return $this->db->execute($query, $search, $search, $this->user->id);
 		}
 
+		public function get_path($container_id) {
+			if (($container = $this->get_container($container_id)) === false) {
+				return false;
+			}
+
+			$result = $container["name"]." / ";
+
+			if ($container["parent_id"] != 0) {
+				$result = $this->get_path($container["parent_id"]).$result;
+			}
+
+			return $result;
+		}
+
 		public function get_parent_id($parent_id) {
 			if ($parent_id == 0) {
 				return 0;

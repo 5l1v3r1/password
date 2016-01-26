@@ -14,6 +14,7 @@
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
 <meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (http://www.banshee-php.org/)" />
+<meta http-equiv="refresh" content="{/output/banshee/session_timeout}; url=/logout" />
 <title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">
 <link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />

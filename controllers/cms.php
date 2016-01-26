@@ -7,17 +7,15 @@
 					"Roles"         => array("cms/role", "roles.png"),
 					"Organisations" => array("cms/organisation", "organisations.png"),
 					"Access"        => array("cms/access", "access.png")),
-				"Content" => array(
-					"Files"         => array("cms/file", "file.png"),
+				"Content / System" => array(
 					#"Languages"     => array("cms/language", "language.png"),
 					"Menu"          => array("cms/menu", "menu.png"),
-					"Pages"         => array("cms/page", "page.png")),
-				"System" => array(
+					"Pages"         => array("cms/page", "page.png"),
 					"Action log"    => array("cms/action", "action.png"),
 					"Settings"      => array("cms/settings", "settings.png")));
 
 			if (module_exists("setup")) {
-				$this->output->add_system_warning("The setup module is still available. Remove it from settings/public_pages.conf.");
+				$this->output->add_system_warning("The setup module is still available. Remove it from settings/public_modules.conf.");
 			}
 
 			if ($this->settings->secret_website_code == "CHANGE_ME_INTO_A_RANDOM_STRING") {

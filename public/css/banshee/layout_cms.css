@@ -178,6 +178,10 @@ div.btn-group {
 	margin:15px 10px 10px 0;
 }
 
+.btn {
+	height:30px;
+}
+
 @media (min-width:768px) {
 	.btn {
 		padding:4px 24px;

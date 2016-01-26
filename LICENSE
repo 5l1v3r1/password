@@ -14,13 +14,9 @@ In no event shall the author of Banshee be liable for any bug in this software.
 The following files are not part of the Banshee PHP framework:
 
 	- Bootstrap         : public/(css|js)/banshee/bootstrap.(css.js)
-	- DataTables        : public/js/banshee/jquery.datatables.js
-	- FPDF              : libraries/fpdf.php
 	- jQuery            : public/(css|js)/jquery/*
 	- MD5 javascript    : public/js/banshee/md5.js
-	- prettyPhoto       : public/js/banshee/jquery.prettyphoto.js
 	- SHA1 javascript   : public/js/banshee/sha1.js
 	- SHA256 javascript : public/js/banshee/sha256.js
-	- ZIP library       : libraries/zipfile.php
 
 Look for copyright messages inside those files.

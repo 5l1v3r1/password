@@ -287,7 +287,7 @@
 	 * ERROR:  -
 	 */
 	function random_string($length = 32) {
-		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
+		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%^&*?+=-";
 		$max_pos = strlen($characters) - 1;
 
 		$result = "";

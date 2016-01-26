@@ -3,6 +3,7 @@ Banshee
 
 This Password Manager is based on the Banshee PHP framework (http://www.banshee-php.org/). Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
 
+
 Configure your webserver
 ------------------------
 Use the directory 'public' as the webroot directory and allow PHP execution. If you use the Hiawatha webserver, you can use the following UrlToolkit configuration:
@@ -10,13 +11,13 @@ Use the directory 'public' as the webroot directory and allow PHP execution. If 
 	UrlToolkit {
 		ToolkitID = banshee
 		RequestURI isfile Return
-		Match ^/(css|files|images|js)($|/) Return
+		Match ^/(css|files|fonts|images|js)(/|$) Return
 		Match ^/(favicon.ico|robots.txt)$ Return
-		Match .*\?(.*) Rewrite /index.php?$1
-		Match .* Rewrite /index.php
+		Match [^?]*(\?.*)? Rewrite /index.php$1
 	}
 
 For Apache, there is a .htaccess file in the 'public' directory which contains the URL rewriting rules.
+
 
 Configure PHP
 -------------
@@ -28,9 +29,11 @@ Banshee needs PHP's MySQL and XSL module. The Password Manager also needs the MC
 	magic_quotes_gpc = Off
 	register_globals = Off
 
+
 Configure your database
 -----------------------
-Open the website in your browser and follow the instructions on your screen.
+Open the website in your browser and follow the instructions on your screen. In case of an error, add /setup to the URL.
+
 
 Configure Banshee
 -----------------

@@ -62,6 +62,7 @@
 			$this->output->open_tag("overview");
 
 			foreach ($passwords as $password) {
+				$password["path"] = $this->model->get_path($password["container_id"]);
 				$this->output->record($password, "password");
 			}
 

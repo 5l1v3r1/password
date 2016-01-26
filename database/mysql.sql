@@ -176,7 +176,7 @@ CREATE TABLE `passwords` (
   `name` varchar(100) NOT NULL,
   `url` tinytext NOT NULL,
   `username` varchar(50) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(256) NOT NULL,
   `info` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `container_id` (`container_id`),
@@ -199,14 +199,12 @@ CREATE TABLE `roles` (
   `cms` tinyint(4) DEFAULT '0',
   `cms/access` tinyint(4) DEFAULT '0',
   `cms/action` tinyint(4) DEFAULT '0',
-  `cms/file` tinyint(4) DEFAULT '0',
-  `cms/languages` tinyint(4) DEFAULT '0',
+  `cms/language` tinyint(4) DEFAULT '0',
   `cms/menu` tinyint(4) DEFAULT '0',
   `cms/organisation` tinyint(4) DEFAULT '0',
   `cms/page` tinyint(4) DEFAULT '0',
   `cms/role` tinyint(4) DEFAULT '0',
   `cms/settings` tinyint(4) DEFAULT '0',
-  `cms/switch` tinyint(4) DEFAULT '0',
   `cms/user` tinyint(4) DEFAULT '0',
   `container` tinyint(4) DEFAULT '0',
   `password` tinyint(4) DEFAULT '0',
@@ -221,7 +219,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1);
+INSERT INTO `roles` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,0,0,0,0,0,0,0,0,0,0,1,1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -268,7 +266,7 @@ CREATE TABLE `settings` (
 --
 
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(5,'default_language','string','en'),(9,'start_page','string','container'),(10,'webmaster_email','string','root@localhost'),(26,'head_title','string','Password Manager'),(27,'head_description','string','Password management tool'),(28,'head_keywords','string','password, management tool'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(39,'hiawatha_cache_default_time','integer','600'),(41,'notify_prowl_key','string',''),(42,'hiawatha_cache_enabled','boolean','false'),(43,'session_timeout','integer','1200'),(44,'session_persistent','boolean','false');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(5,'default_language','string','en'),(9,'start_page','string','container'),(10,'webmaster_email','string','root@localhost'),(26,'head_title','string','Password Manager'),(27,'head_description','string','Password management tool'),(28,'head_keywords','string','password, management tool'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(39,'hiawatha_cache_default_time','integer','600'),(41,'notify_prowl_key','string',''),(42,'hiawatha_cache_enabled','boolean','false'),(43,'session_timeout','integer','120'),(44,'session_persistent','boolean','false');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 

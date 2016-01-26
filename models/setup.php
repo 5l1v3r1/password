@@ -114,7 +114,7 @@
 		/* Import database tables from file
 		 */
 		public function import_tables() {
-			system("mysql -u \"".DB_USERNAME."\" --password=\"".DB_PASSWORD."\" \"".DB_DATABASE."\" < ../database/mysql.sql", $result);
+			system("mysql -h \"".DB_HOSTNAME."\" -u \"".DB_USERNAME."\" --password=\"".DB_PASSWORD."\" \"".DB_DATABASE."\" < ../database/mysql.sql", $result);
 			if ($result != 0) {
 				$this->output->add_message("Error while importing database tables.");
 				return false;

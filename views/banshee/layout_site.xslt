@@ -9,11 +9,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="author" content="Hugo Leisink" />
-<meta name="publisher" content="PUBLISHER" />
-<meta name="copyright" content="Copyright (C) by Hugo Leisink" />
+<meta name="publisher" content="Hugo Leisink" />
+<meta name="copyright" content="Copyright (C) Hugo Leisink" />
 <meta name="description" content="{description}" />
 <meta name="keywords" content="{keywords}" />
-<meta name="generator" content="Banshee PHP framework v{/output/banshee_version} (http://www.banshee-php.org/)" />
+<meta name="generator" content="Banshee PHP framework v{/output/banshee/version} (http://www.banshee-php.org/)" />
+<xsl:if test="/output/banshee/session_timeout!='' and /output/user">
+<meta http-equiv="refresh" content="{/output/banshee/session_timeout}; url=/logout" />
+</xsl:if>
 <link rel="apple-touch-icon" href="/images/iphone.png" />
 <title><xsl:if test="title/@page!=''"><xsl:value-of select="title/@page" /> - </xsl:if><xsl:value-of select="title" /></title>
 <xsl:for-each select="alternates/alternate">

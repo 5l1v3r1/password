@@ -7,9 +7,7 @@
 			$this->output->keywords = "login";
 			$this->output->title = "Login";
 
-			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("banshee/login.js");
-			$this->output->run_javascript("set_focus(); hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("login", array("register" => show_boolean(module_exists("register"))));
 

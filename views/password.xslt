@@ -16,7 +16,10 @@
 <xsl:if test="username!=''">
 <tr><td>Username:</td><td><xsl:value-of select="username" /></td></tr>
 </xsl:if>
-<tr><td>Password:</td><td><input id="password" readonly="readonly" /></td></tr>
+<tr><td>Password:</td><td><input id="password" readonly="readonly" class="text">
+<xsl:if test="/output/@iphone='yes'"><xsl:attribute name="onClick">this.setSelectionRange(0, this.value.length)</xsl:attribute></xsl:if>
+<xsl:if test="/output/@iphone='no'"><xsl:attribute name="onClick">this.select()</xsl:attribute></xsl:if>
+</input></td></tr>
 <tr id="inforow"><td>Information:</td><td><span id="info"></span></td></tr>
 </table>
 

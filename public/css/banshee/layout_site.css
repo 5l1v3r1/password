@@ -184,6 +184,7 @@ div.btn-group {
 
 .btn {
 	padding:4px 24px;
+	height:30px;
 }
 
 @media (max-width:767px) {
@@ -265,8 +266,8 @@ div.footer span {
 
 @media (max-width:767px) {
 	div.footer span {
-		display:inline-block;
-		margin:5px 20px;
+		display:block;
+		margin-top:10px;
 	}
 }
 

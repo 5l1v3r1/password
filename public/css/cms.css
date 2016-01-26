@@ -21,15 +21,3 @@ div.panel img {
 .panel-body {
 	padding-bottom:0;
 }
-
-div.panel_content {
-	display:inline-block;
-	width:48%;
-	float:left;
-}
-
-div.panel_system {
-	display:inline-block;
-	width:48%;
-	float:right;
-}

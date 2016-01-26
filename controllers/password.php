@@ -20,7 +20,6 @@
 				return;
 			}
 
-			$this->output->add_javascript("banshee/ajax.js");
 			$this->output->add_javascript("password.js");
 			$this->output->run_javascript("load_values(".$password_id.")");
 
@@ -30,7 +29,6 @@
 		}
 
 		private function show_password_form($password) {
-			$this->output->add_javascript("banshee/ajax.js");
 			$this->output->add_javascript("password.js");
 
 			$this->output->open_tag("edit");
