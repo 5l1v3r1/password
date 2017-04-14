@@ -1,4 +1,11 @@
 <?php
+	/* controllers/cms.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class cms_controller extends controller {
 		public function execute() {
 			$menu = array(

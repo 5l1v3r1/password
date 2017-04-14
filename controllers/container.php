@@ -57,8 +57,6 @@
 				header("Location: /password/".$passwords[0]["id"]);
 			}
 
-			$this->output->add_javascript("container.js");
-
 			$this->output->open_tag("overview");
 
 			foreach ($passwords as $password) {
@@ -78,11 +76,11 @@
 			$this->output->record($container, "container");
 
 			if (isset($container["id"])) {
-				if (($containers = $this->model->get_all_containers()) !== false) {
+				if (($containers = $this->model->get_all_containers($container["id"])) !== false) {
 					$this->output->open_tag("containers");
-					$this->output->add_tag("container", "Main", array("id" => 0));
+					$this->output->add_tag("container", ROOT_CONTAINER_NAME, array("id" => 0));
 					foreach ($containers as $cont) {
-						if ($cont["id"] == $container["id"]) {
+						if ($this->model->parent_loop($container["id"], $cont["id"])) {
 							continue;
 						}
 						$this->output->add_tag("container", $cont["name"], array("id" => $cont["id"]));

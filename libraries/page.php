@@ -69,7 +69,11 @@
 			}
 
 			if ($this->module === null) {
-				$this->select_module($page);
+				if (($page == null) && is_true(DEBUG_MODE)) {
+					$this->module = "setup";
+				} else {
+					$this->select_module($page);
+				}
 			}
 		}
 
@@ -173,13 +177,6 @@
 		 */
 		public function select_module($page) {
 			if (($this->module !== null) && ($this->module !== LOGIN_MODULE)) {
-				return;
-			}
-
-			/* Old browser
-			 */
-			if (preg_match("/MSIE [567]/", $_SERVER["HTTP_USER_AGENT"]) > 0) {
-				$this->module = "banshee/browser";
 				return;
 			}
 

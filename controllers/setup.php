@@ -1,4 +1,11 @@
 <?php
+	/* controllers/setup.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class setup_controller extends controller {
 		public function execute() {
 			if ($_SERVER["HTTP_SCHEME"] != "https") {
@@ -8,14 +15,27 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["submit_button"] == "Create database") {
 					$this->model->create_database($_POST["username"], $_POST["password"]);
-				} else if ($_POST["submit_button"] == "Import tables") {
-					$this->model->import_tables();
+				} else if ($_POST["submit_button"] == "Import SQL") {
+					$this->model->import_sql();
+				} else if ($_POST["submit_button"] == "Update database") {
+					$this->model->update_database();
+				} else if ($_POST["submit_button"] == "Set password") {
+					$this->model->set_admin_credentials($_POST["username"], $_POST["password"], $_POST["repeat"]);
 				}
 			}
 
 			$step = $this->model->step_to_take();
 			$this->output->open_tag($step);
 			switch ($step) {
+				case "php_extensions":
+					$missing = $this->model->missing_php_extensions();
+					foreach ($this->model->missing_php_extensions() as $extension) {
+						$this->output->add_tag("extension", $extension);
+					}
+					ob_clean();
+					break;
+				case "mysql_client":
+					break;
 				case "db_settings":
 					$this->model->remove_database_errors();
 					break;
@@ -25,7 +45,17 @@
 					$this->output->add_tag("username", $username);
 					$this->output->run_javascript("document.getElementById('password').focus()");
 					break;
-				case "import_tables":
+				case "import_sql":
+					ob_clean();
+					break;
+				case "update_db":
+					ob_clean();
+					break;
+				case "credentials":
+					if ($_POST["submit_button"] != "Set password") {
+						$_POST["username"] = "admin";
+					}
+					$this->output->add_tag("username", $_POST["username"]);
 					ob_clean();
 					break;
 				case "done":

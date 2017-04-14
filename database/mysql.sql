@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.5.43, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.15  Distrib 10.0.29-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: hugo_password
+-- Host: localhost    Database: localhost
 -- ------------------------------------------------------
--- Server version	5.5.43-0ubuntu0.14.04.1
+-- Server version	10.0.29-MariaDB-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -158,6 +158,7 @@ CREATE TABLE `pages` (
   `content` mediumtext NOT NULL,
   `visible` tinyint(1) NOT NULL,
   `back` tinyint(1) NOT NULL,
+  `malicious` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -196,6 +197,8 @@ CREATE TABLE `roles` (
   `name` varchar(50) NOT NULL,
   `profile` tinyint(4) DEFAULT '0',
   `session` tinyint(4) DEFAULT '0',
+  `container` tinyint(4) DEFAULT '0',
+  `password` tinyint(4) DEFAULT '0',
   `cms` tinyint(4) DEFAULT '0',
   `cms/access` tinyint(4) DEFAULT '0',
   `cms/action` tinyint(4) DEFAULT '0',
@@ -206,8 +209,6 @@ CREATE TABLE `roles` (
   `cms/role` tinyint(4) DEFAULT '0',
   `cms/settings` tinyint(4) DEFAULT '0',
   `cms/user` tinyint(4) DEFAULT '0',
-  `container` tinyint(4) DEFAULT '0',
-  `password` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -219,7 +220,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,0,0,0,0,0,0,0,0,0,0,1,1);
+INSERT INTO `roles` VALUES (1,'Administrator',1,1,1,1,1,1,1,1,1,1,1,1,1,1),(2,'User',1,1,1,1,0,0,0,0,0,0,0,0,0,0);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +233,7 @@ DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sessions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `session_id` varchar(100) NOT NULL,
+  `session_id` varchar(128) NOT NULL,
   `content` text,
   `expire` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(10) unsigned DEFAULT NULL,
@@ -265,8 +266,9 @@ CREATE TABLE `settings` (
 -- Dumping data for table `settings`
 --
 
+LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(5,'default_language','string','en'),(9,'start_page','string','container'),(10,'webmaster_email','string','root@localhost'),(26,'head_title','string','Password Manager'),(27,'head_description','string','Password management tool'),(28,'head_keywords','string','password, management tool'),(35,'secret_website_code','string','CHANGE_ME_INTO_A_RANDOM_STRING'),(39,'hiawatha_cache_default_time','integer','600'),(41,'notify_prowl_key','string',''),(42,'hiawatha_cache_enabled','boolean','false'),(43,'session_timeout','integer','120'),(44,'session_persistent','boolean','false');
+INSERT INTO `settings` VALUES (1,'admin_page_size','integer','25'),(2,'default_language','string','en'),(3,'page_after_login','string','container'),(4,'start_page','string','container'),(5,'webmaster_email','string','root@localhost'),(6,'head_title','string','Password Manager'),(7,'head_description','string','Password management tool'),(8,'head_keywords','string','password, management tool'),(9,'secret_website_code','string',''),(10,'hiawatha_cache_time','integer','600'),(11,'notify_prowl_key','string',''),(12,'hiawatha_cache_enabled','boolean','false'),(13,'session_timeout','integer','120'),(14,'session_persistent','boolean','false');
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -311,6 +313,7 @@ CREATE TABLE `users` (
   `password` varchar(128) NOT NULL,
   `one_time_key` varchar(128) DEFAULT NULL,
   `cert_serial` int(10) unsigned DEFAULT NULL,
+  `authenticator_secret` varchar(16) DEFAULT NULL,
   `status` tinyint(4) unsigned NOT NULL DEFAULT '0',
   `fullname` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -329,7 +332,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,1,'admin','x',NULL,NULL,2,'Administrator','root@localhost','x');
+INSERT INTO `users` VALUES (1,1,'admin','none',NULL,NULL,null,1,'Administrator','root@localhost','');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -342,4 +345,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-06-18 15:43:35
+-- Dump completed on 2017-03-31  1:20:01

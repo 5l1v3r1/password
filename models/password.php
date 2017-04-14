@@ -17,6 +17,10 @@
 			return $password;
 		}
 
+		public function get_all_containers() {
+			return $this->borrow("container")->get_all_containers(null);
+		}
+
 		public function save_oke($password) {
 			$result = true;
 
@@ -54,12 +58,7 @@
 			}
 
 			$aes = new AES256($_SESSION["crypto_key"].$_COOKIE["crypto_key"]);
-
-			$data = "valid:".$data;
-			$data = $aes->encrypt($data);
-			$data = base64_encode($data);
-
-			return $data;
+			return $aes->encrypt($data);
 		}
 
 		private function decrypt($data) {
@@ -68,16 +67,7 @@
 			}
 
 			$aes = new AES256($_SESSION["crypto_key"].$_COOKIE["crypto_key"]);
-
-			$data = base64_decode($data);
-			$data = $aes->decrypt($data);
-			list($check, $data) = explode(":", $data, 2);
-
-			if (($check != "password") && ($check != "valid")) {
-				return false;
-			}
-
-			return $data;
+			return $aes->decrypt($data);
 		}
 
 		public function create_password($password) {

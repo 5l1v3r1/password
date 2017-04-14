@@ -1,7 +1,7 @@
 Banshee
 =======
 
-This Password Manager is based on the Banshee PHP framework (http://www.banshee-php.org/). Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
+This Password Manager is based on the Banshee PHP framework (https://www.banshee-php.org/). Banshee is a PHP website framework with a main focus on security. It has a Model-View-Controller architecture and uses XSLT for the view. MySQL is being used as the default database, but with little effort other databases can be used as well. Although it's called a framework, it comes with a ready to use CMS, lots of libraries and modules like a forum, weblog and a guestbook.
 
 
 Configure your webserver

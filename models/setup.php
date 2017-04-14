@@ -1,32 +1,80 @@
 <?php
+	/* models/setup.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class setup_model extends model {
+		private $required_php_extensions = array("libxml", "mysqli", "xsl");
+
 		/* Determine next step
 		 */
 		public function step_to_take() {
+			$missing = $this->missing_php_extensions();
+			if (count($missing) > 0) {
+				return "php_extensions";
+			}
+
+			exec("which mysql", $output, $result);
+			if ($result != 0) {
+				return "mysql_client";
+			}
+
 			if ($this->db->connected == false) {
 				$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
-			} else { 
+			} else {
 				$db = $this->db;
 			}
 
 			if ($db->connected == false) {
 				/* No database connection
 				 */
-				if ((DB_HOSTNAME == "localhost") && (DB_DATABASE == "banshee") && (DB_USERNAME == "banshee") && (DB_PASSWORD == "banshee")) {
+				if ((DB_HOSTNAME == "localhost") && (DB_DATABASE == "password") && (DB_USERNAME == "password") && (DB_PASSWORD == "password")) {
+					return "db_settings";
+				} else if (strpos(DB_PASSWORD, "'") !== false) {
+					$this->output->add_system_message("A single quote is not allowed in the password!");
 					return "db_settings";
 				}
 
 				return "create_db";
-			} else {
-				/* Database connection
-				 */
-				$result = $db->execute("show tables like %s", "settings");
-				if (count($result) == 0) {
-					return "import_tables";
-				}
-
-				return "done";
 			}
+
+			$result = $db->execute("show tables like %s", "settings");
+			if (count($result) == 0) {
+				return "import_sql";
+			}
+
+			if ($this->settings->database_version < $this->latest_database_version()) {
+				return "update_db";
+			}
+
+			$result = $db->execute("select password from users where username=%s", "admin");
+			if ($result[0]["password"] == "none") {
+				return "credentials";
+			}
+
+			return "done";
+		}
+
+		/* Missing PHP extensions
+		 */
+		public function missing_php_extensions() {
+			static $missing = null;
+
+			if ($missing !== null) {
+				return $missing;
+			}
+
+			$missing = array();
+			foreach ($this->required_php_extensions as $extension) {
+				if (extension_loaded($extension) == false) {
+					array_push($missing, $extension);
+				}
+			}
+
+			return $missing;
 		}
 
 		/* Remove datase related error messages
@@ -36,8 +84,8 @@
 			ob_clean();
 
 			foreach ($errors as $error) {
-				if (strtolower(substr($error, 0, 14)) != "mysqli_connect") {
-					print $error;
+				if (strpos(strtolower($error), "mysqli_connect") === false) {
+					print $error."\n";
 				}
 			}
 		}
@@ -113,29 +161,111 @@
 
 		/* Import database tables from file
 		 */
-		public function import_tables() {
-			system("mysql -h \"".DB_HOSTNAME."\" -u \"".DB_USERNAME."\" --password=\"".DB_PASSWORD."\" \"".DB_DATABASE."\" < ../database/mysql.sql", $result);
+		public function import_sql() {
+			$result = system("mysql --version");
+			if (substr($result, 0, 5) != "mysql") {
+				$this->output->add_message("The MySQL command line tool could not be found. Install it first.");
+				return false;
+			}
+
+			exec("mysql -h '".DB_HOSTNAME."' -u '".DB_USERNAME."' --password='".DB_PASSWORD."' '".DB_DATABASE."' < ../database/mysql.sql", $output, $result);
 			if ($result != 0) {
 				$this->output->add_message("Error while importing database tables.");
 				return false;
 			}
 
+			$this->db->query("update users set status=%d", USER_STATUS_CHANGEPWD);
 			$this->settings->secret_website_code = random_string();
 
-			$username = "admin";
-			$password = "banshee";
+			return true;
+		}
+
+		/* Collect latest database version from update_database() function
+		 */
+		private function latest_database_version() {
+			$old_db = $this->db;
+			$old_settings = $this->settings;
+			$this->db = new dummy_object();
+			$this->settings = new dummy_object();
+			$this->settings->database_version = 0;
+
+			$this->update_database();
+			$version = $this->settings->database_version;
+
+			unset($this->db);
+			unset($this->settings);
+			$this->db = $old_db;
+			$this->settings = $old_settings;
+
+			return $version;
+		}
+
+		/* Add setting when missing
+		 */
+		private function ensure_setting($key, $type, $value) {
+			if ($this->db->entry("settings", $key, "key") != false) {
+				return true;
+			}
+
+			$entry = array(
+				"key"   => $key,
+				"type"  => $type,
+				"value" => $value);
+			return $this->db->insert("settings", $entry) !== false;
+		}
+
+		/* Update database
+		 */
+		public function update_database() {
+			return true;
+		}
+
+		/* Set administrator password
+		 */
+		public function set_admin_credentials($username, $password, $repeat) {
+			$result = true;
+
+			if (valid_input($username, VALIDATE_LETTERS, VALIDATE_NONEMPTY) == false) {
+				$this->output->add_message("The username must consist of lowercase letters.");
+				$result = false;
+			}
+
+			if ($password != $repeat) {
+				$this->output->add_message("The passwords do not match.");
+				$result = false;
+			}
+
+			if ($result == false) {
+				return false;
+			}
 
 			$aes = new AES256($password);
-			$crypto_key = base64_encode($aes->encrypt(random_string(32)));
+			$crypto_key = $aes->encrypt(random_string(32));
 			$password = hash_password($password, $username);
 
-			$query = "update users set password=%s, crypto_key=%s, status=%d where username=%s";
-			if ($this->db->query($query, $password, $crypto_key, USER_STATUS_CHANGEPWD, $username) === false) {
-				$this->output->add_message("Database error while setting password.");
+			$query = "update users set username=%s, password=%s, crypto_key=%s, status=%d where username=%s";
+			if ($this->db->query($query, $username, $password, $crypto_key, USER_STATUS_ACTIVE, "admin") === false) {
+				$this->output->add_message("Error while setting password.");
 				return false;
 			}
 
 			return true;
+		}
+	}
+
+	class dummy_object {
+		private $cache = array();
+
+		public function __set($key, $value) {
+			$this->cache[$key] = $value;
+		}
+
+		public function __get($key) {
+			return $this->cache[$key];
+		}
+
+		public function __call($func, $args) {
+			 return false;
 		}
 	}
 ?>

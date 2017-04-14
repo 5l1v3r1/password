@@ -1,4 +1,11 @@
 <?php
+	/* controllers/logout.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class logout_controller extends controller {
 		public function execute() {
 			if ($this->user->logged_in) {

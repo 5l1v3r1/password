@@ -150,7 +150,7 @@
 					return false;
 				}
 
-				$session_id = random_string(100);
+				$session_id = hash("sha512", random_string(100));
 
 				if (($result = $this->db->execute($query, $session_id)) === false) {
 					return false;

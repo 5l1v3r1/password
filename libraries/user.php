@@ -33,7 +33,7 @@
 				list($method, $auth) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
 				if (($method == "Basic") && (($auth = base64_decode($auth)) !== false)) {
 					list($username, $password) = explode(":", $auth, 2);
-					if ($this->login_password($username, $password, false) == false) {
+					if ($this->login_password($username, $password) == false) {
 						header("Status: 401");
 					} else {
 						$this->bind_to_ip();
@@ -113,17 +113,15 @@
 			$_SESSION["last_private_visit"] = time();
 
 			$this->session->set_user_id($user_id);
-
-			unset($_SESSION["challenge"]);
 		}
 
 		/* Verify user credentials
 		 *
-		 * INPUT:  string username, string password, boolean challenge-response method used
+		 * INPUT:  string username, string password[, string authenticator code]
 		 * OUTPUT: boolean login correct
 		 * ERROR:  -
 		 */
-		public function login_password($username, $password, $use_challenge_response_method) {
+		public function login_password($username, $password, $code = null) {
 			$query = "select * from users where username=%s and status!=%d limit 1";
 			if (($data = $this->db->execute($query, $username, USER_STATUS_DISABLED)) == false) {
 				header("X-Hiawatha-Monitor: failed_login");
@@ -134,11 +132,20 @@
 
 			usleep(rand(0, 10000));
 
-			if ($user["password"] === hash_password($password, $username)) {
+			if (is_false(USE_AUTHENTICATOR)) {
+				$auth_code_ok = true;
+			} else if ($user["authenticator_secret"] === null) {
+				$auth_code_ok = true;
+			} else {
+				$authenticator = new authenticator;
+				$auth_code_ok = $authenticator->verify_code($user["authenticator_secret"], $code);
+			}
+
+			if (($user["password"] === hash_password($password, $username)) && $auth_code_ok) {
 				$this->login((int)$user["id"]);
 
 				$aes = new AES256($password);
-				$crypto_key = $aes->decrypt(base64_decode($user["crypto_key"]));
+				$crypto_key = $aes->decrypt($user["crypto_key"]);
 				$_SESSION["crypto_key"] = substr($crypto_key, 0, 16);
 				$_COOKIE["crypto_key"] = substr($crypto_key, 16);
 				setcookie("crypto_key", $_COOKIE["crypto_key"]);

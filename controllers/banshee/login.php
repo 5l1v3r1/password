@@ -9,7 +9,9 @@
 
 			$this->output->add_javascript("banshee/login.js");
 
-			$this->output->open_tag("login", array("register" => show_boolean(module_exists("register"))));
+			$this->output->open_tag("login", array(
+				"authenticator" => show_boolean(USE_AUTHENTICATOR),
+				"register"      => show_boolean(module_exists("register"))));
 
 			$this->output->add_tag("url", $_SERVER["REQUEST_URI"]);
 

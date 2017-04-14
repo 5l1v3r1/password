@@ -79,7 +79,7 @@
 
 <table class="edit">
 <label for="name">Container:</label>
-<input type="text" id="name" name="name" value="{container/name}" class="form-control" />
+<input type="text" id="name" name="name" value="{container/name}" class="form-control" autofocus="autofocus" />
 <xsl:if test="container/@id">
 <label for="parent">Parent container:</label>
 <select id="parent" name="parent_id" class="form-control">

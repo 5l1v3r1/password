@@ -67,14 +67,14 @@
 
 		list($protocol,, $referer_host) = explode("/", $referer, 4);
 		list($referer_host) = explode(":", $referer_host);
-		if (($protocol != "http:") && ($protocol == "https:")) {
+		if (($protocol != "http:") && ($protocol != "https:")) {
 			return false;
 		}
 
-		$valid_hostnames = array($_SERVER["HTTP_HOST"]);
-		if (in_array($referer_host, $valid_hostnames)) {
+		list($http_host) = explode(":", $_SERVER["HTTP_HOST"]);
+		if ($http_host == $referer_host) {
 			return false;
-		}
+		}   
 
 		$message = sprintf("CSRF attempt from %s blocked", $_SERVER["HTTP_REFERER"]);
 
@@ -287,12 +287,12 @@
 	 * ERROR:  -
 	 */
 	function random_string($length = 32) {
-		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890!@#$%^&*?+=-";
-		$max_pos = strlen($characters) - 1;
+		$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*?+=";
+		$max_chars = strlen($characters) - 1;
 
 		$result = "";
-		while ($length-- > 0) {
-			$result .= $characters[mt_rand(0, $max_pos)];
+		for ($i = 0; $i < $length; $i++) {
+			$result .= $characters[random_int(0, $max_chars)];
 		}
 
 		return $result;

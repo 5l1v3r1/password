@@ -9,10 +9,40 @@
 			return $this->db->execute($query, $this->user->id, $parent_id);
 		}
 
-		public function get_all_containers() {
-			$query = "select id,name from containers where user_id=%d order by name";
+		private function get_parent_path($child, $containers) {
+			$result = "";
 
-			return $this->db->execute($query, $this->user->id);
+			foreach ($containers as $container) {
+				if ($container["id"] == $child["parent_id"]) {
+					$result = $container["name"]." / ";
+
+					if ($container["parent_id"] != 0) {
+						$path = $this->get_parent_id($container, $containers);
+						$result = $path.$result;
+					}
+				}
+			}
+
+			return $result;
+		}
+
+		private function container_sort($a, $b) {
+			return strcmp($a["name"], $b["name"]);
+		}
+
+		public function get_all_containers($current_id) {
+			$query = "select id,name,parent_id from containers where user_id=%d";
+
+			$containers = $this->db->execute($query, $this->user->id);
+
+			foreach ($containers as $i => $container) {
+				$path = $this->get_parent_path($container, $containers);
+				$containers[$i]["name"] = $path.$container["name"];
+			}
+
+			usort($containers, array($this, "container_sort"));
+
+			return $containers;
 		}
 
 		public function get_passwords($container_id) {
@@ -109,20 +139,67 @@
 			return true;
 		}
 
+		public function parent_loop($container_id, $parent_id) {
+			do {
+				if ($parent_id == $container_id) {
+					return true;
+				}
+
+				$parent_id = $this->get_parent_id($parent_id);
+			} while ($parent_id != 0);
+
+			return false;
+		}
+
 		public function save_oke($container) {
 			$result = true;
 
+			/* Check name
+			 */
 			if (trim($container["name"]) == "") {
 				$this->output->add_message("The name can't be empty.");
+				$result = false;
+			} else if (strtolower(trim($container["name"])) == strtolower(ROOT_CONTAINER_NAME)) {
+				$this->output->add_message("Invalid container name.");
 				$result = false;
 			}
 
 			if ($this->valid_container_id($container["parent_id"]) == false) {
 				$this->output->add_message("Invalid parent container id.");
 				$result = false;
-			} else if ($container["parent_id"] == $container["id"]) {
-				$this->output->add_message("Invalid parent container id.");
+			}
+
+			/* Check double name
+			 */
+			$query = "select count(*) as count from containers where user_id=%d and name=%s and parent_id";
+			$args = array($this->user->id, $container["name"]);
+
+			if ($container["parent_id"] == 0) {
+				$query .= " is null";
+			} else {
+				$query .= "=%d";
+				array_push($args, $container["parent_id"]);
+			}
+
+			if (isset($container["id"])) {
+				$query .= " and id!=%d";
+				array_push($args, $container["id"]);
+			}
+
+			if (($count = $this->db->execute($query, $args)) == false) {
 				$result = false;
+			} else if ($count[0]["count"] > 0) {
+				$this->output->add_message("Container name already exists.");
+				$result = false;
+			}
+
+			/* Check parent loop
+			 */
+			if (isset($container["id"])) {
+				if ($this->parent_loop($container["id"], $container["parent_id"])) {
+					$this->output->add_message("Container parent loop detected.");
+					$result = false;
+				}
 			}
 
 			return $result;
@@ -159,27 +236,29 @@
 		}
 
 		public function delete_oke($container) {
+			$result = true;
+
 			if ($this->valid_container_id($container["id"]) == false) {
 				$this->output->add_message("Invalid container id.");
 				$result = false;
 			}
 
 			$query = "select count(*) as count from containers where parent_id=%d";
-			if (($result = $this->db->execute($query, $container["id"])) == false) {
+			if (($count = $this->db->execute($query, $container["id"])) == false) {
 				$this->output->add_message("Database error.");
 				return false;
 			}
-			if ($result[0]["count"] > 0) {
+			if ($count[0]["count"] > 0) {
 				$this->output->add_message("Container contains other container(s).");
 				$result = false;
 			}
 
 			$query = "select count(*) as count from passwords where container_id=%d";
-			if (($result = $this->db->execute($query, $container["id"])) == false) {
+			if (($count = $this->db->execute($query, $container["id"])) == false) {
 				$this->output->add_message("Database error.");
 				return false;
 			}
-			if ($result[0]["count"] > 0) {
+			if ($count[0]["count"] > 0) {
 				$this->output->add_message("Container contains password(s).");
 				$result = false;
 			}

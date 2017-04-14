@@ -25,8 +25,8 @@
 	define("ERROR_MODULE", "banshee/error");
 	define("LOGIN_MODULE", "banshee/login");
 	define("LOGOUT_MODULE", "logout");
-	define("FILES_PATH", "files");
 	define("TLS_CERT_SERIAL_VAR", "TLS_CERT_SERIAL");
+	define("ROOT_CONTAINER_NAME", "[ Root ]");
 
 	/* Auto class loader
 	 *
@@ -229,38 +229,6 @@
 				array_push($result, $item);
 			}
 		}
-
-		return $result;
-	}
-
-	/* Localized date string
-	 *
-	 * INPUT:  string format[, integer timestamp]
-	 * OUTPUT: string date
-	 * ERROR:  -
-	 */
-	function date_string($format, $timestamp = null) {
-		if ($timestamp === null) {
-			$timestamp = time();
-		}
-
-		$days_of_week = config_array(DAYS_OF_WEEK);
-		$months_of_year = config_array(MONTHS_OF_YEAR);
-
-		$format = strtr($format, "lDFM", "#$%&");
-		$result = date($format, $timestamp);
-
-		$day = $days_of_week[(int)date("N", $timestamp) - 1];
-		$result = str_replace("#", $day, $result);
-
-		$day = substr($days_of_week[(int)date("N", $timestamp) - 1], 0, 3);
-		$result = str_replace("$", $day, $result);
-
-		$month = $months_of_year[(int)date("n", $timestamp) - 1];
-		$result = str_replace("%", $month, $result);
-
-		$month = substr($months_of_year[(int)date("n", $timestamp) - 1], 0, 3);
-		$result = str_replace("&", $month, $result);
 
 		return $result;
 	}

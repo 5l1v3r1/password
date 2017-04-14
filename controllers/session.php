@@ -1,4 +1,11 @@
 <?php
+	/* controllers/session.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class session_controller extends controller {
 		private function show_sessions() {
 			if (($sessions = $this->model->get_sessions()) === false) {

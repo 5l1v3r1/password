@@ -14,6 +14,10 @@
 <input type="text" autocapitalize="off" autocorrect="off" id="username" name="username" value="{username}" class="form-control" />
 <label for="password">Password:</label>
 <input type="password" id="password" name="password" class="form-control" />
+<xsl:if test="@authenticator='yes'">
+<label for="code">Authenticator code:</label>
+<input type="text" id="code" name="code" class="form-control" />
+</xsl:if>
 <p>Bind session to IP (<xsl:value-of select="remote_addr" />): <input type="checkbox" name="bind_ip">
 <xsl:if test="bind">
 <xsl:attribute name="checked">checked</xsl:attribute>

@@ -35,7 +35,7 @@
 			$this->output->record($password, "password");
 
 			if (isset($password["id"])) {
-				if (($containers = $this->model->borrow("container")->get_all_containers()) !== false) {
+				if (($containers = $this->model->get_all_containers()) !== false) {
 					$this->output->open_tag("containers");
 					foreach ($containers as $cont) {
 						$this->output->add_tag("container", $cont["name"], array("id" => $cont["id"]));
@@ -70,7 +70,7 @@
 		}
 
 		private function random_password() {
-			$this->output->add_tag("password", random_string(15));
+			$this->output->add_tag("password", random_string(20));
 		}
 
 		public function execute() {

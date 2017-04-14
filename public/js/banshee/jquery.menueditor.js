@@ -3,7 +3,7 @@
  * Copyright (C) by Hugo Leisink <hugo@leisink.net>
  * This file is part of the Banshee PHP framework
  * http://www.banshee-php.org/
-*/
+ */
 
 (function($) {
 	var pluginName = "menuEditor";
@@ -15,11 +15,11 @@
 
 	var l_text =        '<span class="label">Text:</span>';
 	var l_link =        '<span class="link label">Link:</span>';
-	var new_node =      '<li>' + l_text + '<input type="text" class="form-control">' + l_link + '<input type="text" class="form-control"></li>';
+	var new_node =      '<li>' + l_text + '<input type="text" placeholder="Text" class="form-control">' + l_link + '<input type="text" placeholder="Link" class="form-control"></li>';
 	var h_insert_node = '<input type="button" value="Insert" class="insert btn btn-default">';
-	var h_add_node =    '<input type="button" value="+" class="add_node">';
-	var h_delete_node = '<input type="button" value="-" class="delete_node">';
-	var h_add_branch =  '<input type="button" value="&gt;" class="add_branch">';
+	var h_add_node =    '<input type="button" value="+" class="btn btn-default btn-xs add_node">';
+	var h_delete_node = '<input type="button" value="-" class="btn btn-default btn-xs delete_node">';
+	var h_add_branch =  '<input type="button" value="&gt;" class="btn btn-default btn-xs add_branch">';
 
 	/* Constructor
 	 */
@@ -31,8 +31,8 @@
 			return null;
 		}
 
-		element.find("li").each(function(){
-			if ($(this).find("ul").size() == 0) {
+		element.find("li").each(function() {
+			if ($(this).find("ul").length == 0) {
 				$(this).find("input:nth-child(2)").first().after(all_buttons());
 			} else {
 				$(this).find("input:nth-child(2)").first().after(node_buttons());
@@ -113,7 +113,7 @@
 		li = $(item).parent().parent();
 		ul = li.parent();
 
-		if (li.find("ul").size() > 0) {
+		if (li.find("ul").length > 0) {
 			if (confirm("Delete branch?") == false) {
 				return;
 			}
@@ -121,7 +121,7 @@
 		li.remove();
 
 		if (ul.parent().prop("tagName") == "LI") {
-			if (ul.find("li").size() == 0) {
+			if (ul.find("li").length == 0) {
 				var b_add_branch = $(h_add_branch);
 				b_add_branch.bind("click", function(e) { add_branch(this); });
 				ul.parent().find("span.buttons").append(b_add_branch);
@@ -153,8 +153,8 @@
 	/* Check for empty branches after sorting
 	 */
 	var sorting_done = function(event, ui) {
-		element.find("ul").each(function(){
-			if ($(this).find("li").size() == 0) {
+		element.find("ul").each(function() {
+			if ($(this).find("li").length == 0) {
 				var b_add_branch = $(h_add_branch);
 				b_add_branch.bind("click", function(e) { add_branch(this); });
 				$(this).parent().find("span.buttons").append(b_add_branch);
@@ -175,11 +175,11 @@
 	 */
 	var give_name = function(elems, current) {
 		var i = 0;
-		elems.children("li").each(function(){
+		elems.children("li").each(function() {
 			var pos = "[" + i + "]";
 			$(this).find("input:nth-child(2)").prop("name", "menu" + current + pos + "[text]");
 			$(this).find("input:nth-child(4)").prop("name", "menu" + current + pos + "[link]");
-			$(this).children("ul").each(function(){
+			$(this).children("ul").each(function() {
 				give_name($(this), current + pos + "[submenu]");
 			});
 			i++;

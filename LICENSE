@@ -1,22 +1,23 @@
-Banshee PHP framework - Copyright (C) by Hugo Leisink <hugo@leisink.net>
+Password Manager - Copyright (c) by Hugo Leisink <hugo@leisink.net>
+
+The Password Manager is a free and open source PHP web application.
+
+This web application has been built upon the Banshee PHP framework, which is a
+free and open source framework. The Banshee license still applies to the files
+that are part of the Banshee PHP framework. Look inside a file to check if it
+is part of the framework, part of the application or an external library.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Banshee PHP framework license - Copyright (c) by Hugo Leisink <hugo@leisink.net>
 
 You are allowed to use the Banshee PHP framework under the following conditions:
 
-	1) You must leave the copyright messages inside the files which are part of
-	   the Banshee PHP framework unchanged.
+	1) You must leave the copyright messages, inside the files which are part of
+	   the Banshee PHP framework, unchanged.
 	2) If you use (parts of) the Banshee PHP framework to build a website which
 	   you sell or rent to other people or organisations, you must inform them
 	   that "you built the website upon (parts of) the Banshee PHP framework,
 	   which is a free and open source framework".
 
 In no event shall the author of Banshee be liable for any bug in this software.
-
-The following files are not part of the Banshee PHP framework:
-
-	- Bootstrap         : public/(css|js)/banshee/bootstrap.(css.js)
-	- jQuery            : public/(css|js)/jquery/*
-	- MD5 javascript    : public/js/banshee/md5.js
-	- SHA1 javascript   : public/js/banshee/sha1.js
-	- SHA256 javascript : public/js/banshee/sha256.js
-
-Look for copyright messages inside those files.

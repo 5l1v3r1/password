@@ -1,4 +1,11 @@
 <?php
+	/* controllers/register.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class register_controller extends controller {
 		private function show_form($data) {
 			$this->output->record($data, "form");

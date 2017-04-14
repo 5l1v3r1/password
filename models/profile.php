@@ -1,4 +1,11 @@
 <?php
+	/* models/profile.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class profile_model extends model {
 		public function last_account_logs() {
 			if (($fp = fopen("../logfiles/actions.log", "r")) == false) {
@@ -76,7 +83,7 @@
 
 				array_push($keys, "crypto_key");
 				$aes = new AES256($profile["password"]);
-				$profile["crypto_key"] = base64_encode($aes->encrypt($_SESSION["crypto_key"].$_COOKIE["crypto_key"]));
+				$profile["crypto_key"] = $aes->encrypt($_SESSION["crypto_key"].$_COOKIE["crypto_key"]);
 
 				array_push($keys, "password");
 				$profile["password"] = $profile["hashed"];

@@ -1,4 +1,11 @@
 <?php
+	/* controllers/profile.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class profile_controller extends controller {
 		private function show_profile_form($profile) {
 			$this->output->add_javascript("profile.js");

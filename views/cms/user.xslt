@@ -1,4 +1,13 @@
 <?xml version="1.0" ?>
+<!--
+//
+//  views/cms/user.xslt
+//
+//  Copyright (C) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  http://www.banshee-php.org/
+//
+//-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:include href="../banshee/main.xslt" />
 <xsl:include href="../banshee/pagination.xslt" />
@@ -100,6 +109,14 @@
 </option>
 </xsl:for-each>
 </select>
+</xsl:if>
+<xsl:if test="@authenticator='yes'">
+<label for="secret">Authenticator secret:</label>
+<div class="input-group">
+<span class="input-group-addon"><input type="checkbox" id="set_secret" name="set_secret" onClick="javascript:use_secret()" /></span>
+<input type="text" id="secret" name="authenticator_secret" value="{user/authenticator_secret}" class="form-control" onKeyPress="javascript:secret_change()" />
+<span class="input-group-btn"><input type="button" value="Generate" class="btn btn-default" onClick="javascript:set_authenticator_code()" /></span>
+</div>
 </xsl:if>
 <label for="roles">Roles:</label>
 <xsl:for-each select="roles/role">

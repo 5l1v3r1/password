@@ -68,7 +68,7 @@
 
 			$this->output->add_javascript("cms/user.js");
 
-			$this->output->open_tag("edit");
+			$this->output->open_tag("edit", array("authenticator" => show_boolean(USE_AUTHENTICATOR)));
 
 			$this->output->open_tag("status");
 			$status = array(
@@ -176,12 +176,16 @@
 					"roles"           => array(ADMIN_ROLE_ID + 1),
 					"status"          => USER_STATUS_CHANGEPWD);
 				$this->show_user_form($user);
+			} else if (($this->page->pathinfo[2] == "authenticator") && $this->page->ajax_request) {
+				$authenticator = new authenticator;
+				$this->output->add_tag("secret", $authenticator->create_secret());
 			} else if (valid_input($this->page->pathinfo[2], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				/* Show the user webform
 				 */
 				if (($user = $this->model->get_user($this->page->pathinfo[2])) == false) {
 					$this->output->add_tag("result", "User not found.");
 				} else {
+					$user["authenticator_secret"] = null;
 					$this->show_user_form($user);
 				}
 			} else {

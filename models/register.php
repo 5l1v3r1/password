@@ -1,4 +1,11 @@
 <?php
+	/* models/register.php
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
 	class register_model extends model {
 		private $minimum_username_length = 4;
 		private $minimum_password_length = 8;
@@ -76,12 +83,6 @@
 				return false;
 			}
 
-			if (($link = base64_encode($link)) === false) {
-				return false;
-			}
-			$link = strtr($link, "/+=", "_-:");
-
-
 			$email = new email("Confirm account creation at ".$_SERVER["SERVER_NAME"], $this->settings->webmaster_email);
 			$email->set_message_fields(array(
 				"FULLNAME" => $data["fullname"],
@@ -98,11 +99,6 @@
 		}
 
 		public function sign_up($data) {
-			$data = strtr($data, "_-:", "/+=");
-			if (($data = base64_decode($data)) === false) {
-				return false;
-			}
-		 	
 			$aes = new AES256($this->settings->secret_website_code);
 			if (($data = $aes->decrypt($data)) === false) {
 				return false;
@@ -127,7 +123,7 @@
 			}
 
 			$aes = new AES256($data["password"]);
-			$crypto_key = base64_encode($aes->encrypt(random_string(32)));
+			$crypto_key = $aes->encrypt(random_string(32));
 
 			$user = array(
 				"id"              => null,

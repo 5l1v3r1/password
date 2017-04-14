@@ -1,6 +1,45 @@
 <?xml version="1.0" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="banshee/main.xslt" />
+<!--
+//
+//  views/setup.xslt
+//
+//  Copyright (C) by Hugo Leisink <hugo@leisink.net>
+//  This file is part of the Banshee PHP framework
+//  http://www.banshee-php.org/
+//
+//-->
+<xsl:stylesheet version="1.1" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:import href="banshee/main.xslt" />
+
+<!--
+//
+//  PHP extensions template
+//
+//-->
+<xsl:template match="php_extensions">
+<p>The following required PHP extensions are missing:</p>
+<ul>
+<xsl:for-each select="extension"><li><xsl:value-of select="." /></li></xsl:for-each>
+</ul>
+<p>Install and/or enable them and refresh this page.</p>
+
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Refresh</a>
+</div>
+</xsl:template>
+
+<!--
+//
+//  MySQL client template
+//
+//-->
+<xsl:template match="mysql_client">
+<p>The MySQL command line client is missing. Install it and refresh this page.</p>
+
+<div class="btn-group">
+<a href="/{/output/page}" class="btn btn-default">Refresh</a>
+</div>
+</xsl:template>
 
 <!--
 //
@@ -8,7 +47,8 @@
 //
 //-->
 <xsl:template match="db_settings">
-<p>Enter your database settings in settings/website.conf and refresh this page.</p>
+<p>Enter your database settings in the file settings/website.conf and refresh this page.</p>
+<p>If the specified database and database user do not exist, this setup will create them for you.</p>
 
 <div class="btn-group">
 <a href="/{/output/page}" class="btn btn-default">Refresh</a>
@@ -23,32 +63,68 @@
 <xsl:template match="create_db">
 <xsl:call-template name="show_messages" />
 
-<p>Enter the MySQL root credentials to create a database and a user for your website.</p>
+<p>Enter the MySQL root credentials to create a database and a database user for your website as specified in settings/website.conf.</p>
 <form action="/{/output/page}" method="post">
 <label for="username">Username:</label>
-<input type="text" id="username" name="username" value="{username}" class="form-control" />
+<input type="text" id="username" name="username" value="{username}" class="form-control" autofocus="autofocus" />
 <label for="password">Password:</label>
 <input type="password" id="password" name="password" class="form-control" />
 
 <div class="btn-group">
 <input type="submit" name="submit_button" value="Create database" class="btn btn-default" />
+<a href="/{/output/page}" class="btn btn-default">Proceed if you created them manually.</a>
 </div>
 </form>
 </xsl:template>
 
 <!--
 //
-//  Import tables template
+//  Import SQL template
 //
 //-->
-<xsl:template match="import_tables">
+<xsl:template match="import_sql">
 <xsl:call-template name="show_messages" />
 
-<p>The next step is to import the file database/mysql.sql into your database.</p>
+<p>The next step is to import the file database/mysql.sql into your database. Make sure the MySQL command-line client is installed on your system.</p>
 <form action="/{/output/page}" method="post">
-<input type="submit" name="submit_button" value="Import tables" class="btn btn-default" />
+<input type="submit" name="submit_button" value="Import SQL" class="btn btn-default" />
 </form>
 </xsl:template>
+
+<!--
+//
+//  Update database template
+//
+//-->
+<xsl:template match="update_db">
+<p>Your database is outdated. Update your database to continue.</p>
+<form action="/{/output/page}" method="post">
+<input type="submit" name="submit_button" value="Update database" class="btn btn-default" />
+</form>
+</xsl:template>
+
+<!--
+//
+//  Credentials template
+//
+//-->
+<xsl:template match="credentials">
+<xsl:call-template name="show_messages" />
+
+<form action="/{/output/page}" method="post">
+<label for="username">Enter the username for the administrator:</label>
+<input type="username" id="username" name="username" value="{username}" class="form-control" />
+<label for="password">Enter new password for this user:</label>
+<input type="password" id="password" name="password" class="form-control" autofocus="autofocus" />
+<label for="repeat">Repeat the password:</label>
+<input type="password" id="repeat" name="repeat" class="form-control" />
+
+<div class="btn-group">
+<input type="submit" name="submit_button" value="Set password" class="btn btn-default" />
+</div>
+</form>
+</xsl:template>
+
 
 <!--
 //
@@ -56,8 +132,8 @@
 //
 //-->
 <xsl:template match="done">
-<p>Done! You can now login with username 'admin' and password 'banshee'.</p>
-<p>Don't forget to disable this setup module by removing it from settings/public_pages.conf.</p>
+<p>Done! You can now login with your username and password.</p>
+<p>Don't forget to disable this setup module by removing it from settings/public_modules.conf.</p>
 
 <div class="btn-group">
 <a href="/" class="btn btn-default">Continue</a>
@@ -70,12 +146,8 @@
 //
 //-->
 <xsl:template match="content">
-<h1>Password Manager setup</h1>
-<xsl:apply-templates select="db_settings" />
-<xsl:apply-templates select="create_db" />
-<xsl:apply-templates select="import_tables" />
-<xsl:apply-templates select="done" />
-<xsl:apply-templates select="result" />
+<h1>Banshee setup</h1>
+<xsl:apply-templates />
 </xsl:template>
 
 </xsl:stylesheet>

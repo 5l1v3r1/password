@@ -39,6 +39,10 @@ div.clear {
 	clear:both;
 }
 
+div.input-group input.btn {
+	padding:6px 25px;
+}
+
 @media (max-width:767px) {
 	table.table-xs th,
 	table.table-xs td {
@@ -156,6 +160,12 @@ input.form-control, textarea.form-control, select.form-control {
 	margin-bottom:5px;
 }
 
+@media (max-width:767px) {
+	input.form-control, textarea.form-control, select.form-control {
+		font-size:16px;
+	}
+}
+
 table.table-hover tbody tr:hover {
 	cursor:pointer;
 }
@@ -176,10 +186,6 @@ ul.pagination {
 
 div.btn-group {
 	margin:15px 10px 10px 0;
-}
-
-.btn {
-	height:30px;
 }
 
 @media (min-width:768px) {

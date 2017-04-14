@@ -7,70 +7,39 @@
 	 */
 
 	class AES256 {
+		private $mode = "aes-256-";
 		private $crypto_key = null;
-		private $resource = null;
-		private $iv = null;
+		private $iv_size = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  string crypto key[, string iv]
+		 * INPUT:  string crypto key[, string mode]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($crypto_key, $iv = null) {
-			if (($this->resource = mcrypt_module_open(MCRYPT_RIJNDAEL_256, "", "cbc", "")) == false) {
-				return;
+		public function __construct($crypto_key, $mode = "ctr") {
+			if (strlen($crypto_key) < 32) {
+				$crypto_key .= hash("sha256", $crypto_key);
 			}
 
-			$this->crypto_key = substr($crypto_key, 0, mcrypt_enc_get_key_size($this->resource));
-
-			$iv_size = mcrypt_enc_get_iv_size($this->resource);
-			if ($iv === null) {
-				$iv = hash("sha256", $this->crypto_key);
-			} else while (strlen($iv) < $iv_size) {
-				$iv .= $iv;
-			}
-			$this->iv = substr($iv, 0, $iv_size);
+			$this->mode .= $mode;
+			$this->crypto_key = substr($crypto_key, 0, 32);
+			$this->iv_size = openssl_cipher_iv_length($this->mode);
 		}
 
-		/* Destructor
+		/* Magic method get
 		 *
-		 * INPUT:  -
-		 * OUTPUT: -
-		 * ERROR:  -
+		 * INPUT:  string key
+		 * OUTPUT: mixed value
+		 * ERROR:  null
 		 */
-		public function __destruct() {
-			if ($this->resource !== null) {
-				mcrypt_module_close($this->resource);
-				$this->resource = null;
-			}
-		}
-
-		/* Encrypt/decrypt data
-		 *
-		 * INPUT:  string data, boolean encrypt
-		 * OUTPUT: string data
-		 * ERROR:  false
-		 */
-		private function crypto($data, $encrypt) {
-			if ($this->resource === null) {
-				return false;
+		public function __get($key) {
+			switch ($key) {
+				case "mode": return $this->mode;
+				case "iv": return $this->iv;
 			}
 
-			$result = mcrypt_generic_init($this->resource, $this->crypto_key, $this->iv);
-			if (($result === false) || ($result < 0)) {
-				return false;
-			}
-
-			if ($encrypt) {
-				$result = mcrypt_generic($this->resource, $data);
-			} else {
-				$result = rtrim(mdecrypt_generic($this->resource, $data), chr(0));
-			}
-
-			mcrypt_generic_deinit($this->resource);
-
-			return $result;
+			return null;
 		}
 
 		/* Encrypt data
@@ -80,7 +49,21 @@
 		 * ERROR:  false
 		 */
 		public function encrypt($data) {
-			return $this->crypto($data, true);
+			if ($this->crypto_key == null) {
+				return false;
+			}
+
+			$iv = openssl_random_pseudo_bytes($this->iv_size);
+			$data = openssl_encrypt($data, $this->mode, $this->crypto_key, OPENSSL_RAW_DATA, $iv);
+
+			if ($data == false) {
+				return false;
+			}
+
+			$data = json_encode(array("iv" => base64_encode($iv), "data" => base64_encode($data)));
+			$data = rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
+
+			return $data;
 		}
 
 		/* Decrypt data
@@ -90,7 +73,22 @@
 		 * ERROR:  false
 		 */
 		public function decrypt($data) {
-			return $this->crypto($data, false);
+			if ($this->crypto_key == null) {
+				return false;
+			}
+
+			$data = base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT)); 
+			$data = json_decode($data, true);
+
+			if (is_array($data) == false) {
+				return false;
+			}
+
+			foreach ($data as $key => $value) {
+				$data[$key] = base64_decode($value);
+			}
+
+			return openssl_decrypt($data["data"], $this->mode, $this->crypto_key, OPENSSL_RAW_DATA, $data["iv"]);
 		}
 	}
 ?>

@@ -45,7 +45,7 @@
 </xsl:if>
 
 <label for="name">Name:</label>
-<input type="text" id="name" name="name" value="{password/name}" class="form-control" />
+<input type="text" id="name" name="name" value="{password/name}" class="form-control" autofocus="autofocus" />
 <label for="url">URL:</label>
 <input type="text" id="url" name="url" value="{password/url}" class="form-control" />
 <label for="username">Username:</label>
